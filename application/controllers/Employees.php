@@ -26,10 +26,12 @@ class Employees extends CI_Controller {
 	public function list(){
         //Az adatbzisban van employees tábla
 		//Listázzuk ki annak tartalmát
+		$view_data = $this->Employees_model->get_list();
 		$this->load->view('employees/list', $view_data);
     }
     
     public function add(){
+		$this->load->helper('url');
         // 0) Rákattintott már a küldésre?
 		if ($this->input->post('submit')){
 			// Validálás
@@ -40,7 +42,7 @@ class Employees extends CI_Controller {
 			$this->form_validation->set_rules('tin', 'TIN', 'required');
 			if($this->form_validation->run()){
 				//Minden validáció sikeresen lefutott
-				if($this->employees_model->insert($this->input->post('name'),
+				if($this->Employees_model->insert($this->input->post('name'),
 					$this->input->post('tin'),
 					$this->input->post('ssn'))){
 					redirect(base_url('employees/list'));
@@ -56,7 +58,15 @@ class Employees extends CI_Controller {
         echo "edit";
     }
     
-    public function delete(){
-        echo "delete";
+    public function delete($id){
+        $this->load->helper('url');
+        // Valós a törlés?
+
+		// jogos-e a törlés, és csak akkor engedélyezem, ha biztos vagy benne
+		if($this->Employees_model->delete($id)){
+			redirect(base_url('employees/list'));
+		}else{
+			show_error('A rekord törlése nem sikerült');
+		}
     }
 }

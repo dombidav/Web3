@@ -32,4 +32,10 @@ class Employees_model extends CI_Model
 		// 2) Hívjuk meg az insert-et és adjuk vissza az értékét
 		return $this->db->insert('employees', $record);
 	}
+
+	public function delete($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete('employees');
+	}
 }
